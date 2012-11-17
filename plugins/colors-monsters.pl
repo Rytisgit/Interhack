@@ -25,6 +25,13 @@ sub random_bold  { $bold_colors[rand @bold_colors] }
 # }}}
 
 # deities {{{
+if($align_chromatic_gods){
+	my @colors=split(",",$align_chromatic_gods) if ($align_chromatic_gods =~/,/);
+	recolor qr/\b(Quetzalcoatl|Mitra|Anu|Athena|Lugh|Shan Lai Ching|Mercury|Issek|Amaterasu Omikami|Blind Io|Tyr|Ptah)\b/ => $colors[0] || "bgreen";
+	recolor qr/\b(Camaxtli|Crom|Ishtar|Hermes|Brigit|Chih Sung-tzu|Venus|Mog|Raijin|The Lady|Odin|Thoth)\b/ => $colors[1] || "byellow";
+	recolor qr/\b(Huhetotl|Set(?! what opt)|Anshar|Poseidon|Manannan Mac Lir|Huan Ti|Mars|Kos|Susanowo|Offler|Loki|Anhur)\b/ => $colors[2] || "bred";
+	recolor qr/\b(Marduk|Moloch)\b/ => @colors[3] || "nhblack";
+}else{
 if ($chromatic_gods)
 {
   each_iteration { s/\b(Marduk|Moloch|Quetzalcoatl|Camaxtli|Huhetotl|Mitra|Crom|Set(?! what opt)|Anu|Ishtar|Anshar|Athena|Hermes|Poseidon|Lugh|Brigit|Manannan Mac Lir|Shan Lai Ching|Chih Sung-tzu|Huan Ti|Mercury|Venus|Mars|Issek|Mog|Kos|Amaterasu Omikami|Raijin|Susanowo|Blind Io|The Lady|Offler|Tyr|Odin|Loki|Ptah|Thoth|Anhur)\b/(join '', map {random_bold()."$_"} split '', $&)."\e[0m"/eg }
@@ -32,6 +39,7 @@ if ($chromatic_gods)
 else
 {
   recolor qr/\b(Marduk|Moloch|Quetzalcoatl|Camaxtli|Huhetotl|Mitra|Crom|Set(?! what opt)|Anu|Ishtar|Anshar|Athena|Hermes|Poseidon|Lugh|Brigit|Manannan Mac Lir|Shan Lai Ching|Chih Sung-tzu|Huan Ti|Mercury|Venus|Mars|Issek|Mog|Kos|Amaterasu Omikami|Raijin|Susanowo|Blind Io|The Lady|Offler|Tyr|Odin|Loki|Ptah|Thoth|Anhur)\b/ => \&random_bold;
+};
 }
 # }}}
 
