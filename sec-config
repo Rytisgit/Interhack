@@ -1,0 +1,145 @@
+# Sec's personal config file
+
+server 'nao';
+
+### Plugin settings:
+
+$chromatic_nemeses = 1;
+$write_interhack_ttyrec = 1;
+$write_normal_ttyrec = 1;
+
+$align_chromatic_gods = 1;
+$exp_2nl_max=20;
+$exp_2nl_noendgame=1;
+
+$short_names{scroll}{60} = ['EW'];
+$short_names{scroll}{80} = ['EA', 'RC'];
+$short_names{potion}{300} = ['GA', 'GL', 'paral'];
+
+$sell_id_tab=1;
+$sell_id_uniq=1;
+
+
+### Plugins:
+
+# Help identify/look up stuff
+include "automap";	# Can display special maps
+include "annotations-corpse";
+include "annotations-messages";
+#include "artifact-name";			# Too cheaty for me
+include "colors-monsters";
+include "gem-name";
+include "priceid-buy";
+include "read-spellbook";
+include "ring-name";
+#include "unnamed-scrolls";			# Annoying and too cheaty for me.
+include "wand-name";
+
+# Prettify display
+include "strip-menucolors";
+include "doy-colors-menus";
+include "doy-colors-messages";
+include "eido-colors-items";
+include "eido-colors-status";
+include "floating-eyes";
+include "idle-gray";		# colors watch menu on NAO
+#include "monster-rename";			# Not my kind of funny
+
+# Status line stuff
+include "botl";						# botl includes these:
+#include "stats";
+#include "hpmon";
+#include "powermon";
+#include "eido-colors-status";
+#include "exp-2nl";
+#include "timer";
+
+# Menus/suggestions
+include "donate";			# Priest protection donation
+include "geno-list";
+include "marker-menu";
+include "mis-wand-id";
+include "wish-menu";
+
+# inventory management
+include "emptylamp-name";
+include "emptywand-name";
+include "autoadjust";
+
+# Statistics/logging stuff
+include "intrinsics-matcher";
+include "intrinsics-tracker";
+include "keystroke-count";
+include "mysterious-force";
+include "notes";
+include "view";				# View old levels (amnesia)
+
+# Other stuff:
+include "automore";			# Skip "--More--"s for the endgame
+include "elbereth";			# Tab for elbereth
+include "force-tabs";		# Possible lifesaver
+
+#include "confirm-confirm"; 		# not needed on NAO (paranoid_hit)
+#include "dual-slow-digestion";		# Unneeded
+#include "eval";					# no need for interactive coding
+#include "fight";					# Macro for fighting without moving
+#include "fortune";					# Unneeded
+#include "grep";					# greps in ttyrec, never done it
+#include "mastermind";				# I can play mastermind myself :)
+#include "termcast"; 				# I'm not termcasting
+
+# My plugins
+include "shk-names";
+include "priceid-sell";
+include "annotations-objects";
+
+
+### Key remappings:
+
+# german keyboard fix
+remap y => "z";
+remap z => "y";
+remap Y => "Z";
+remap Z => "Y";
+
+# ^e to auto-engrave Elbereth, "#mb" to toggle between using "-" or slot "E"
+our $magicbane = 0;
+extended_command "mb" => sub { $magicbane = !$magicbane; "Magicbane " . ($magicbane ? "ON" : "OFF") };
+# Added ^H here to make it correct for first inscription too (exercie wisdom)
+remap chr(5) => sub { $magicbane ? "\e\eEE  Elbereth\n" : "\e\eE-  Elbereth\n" };
+
+# ^b to bag auto-bag non-dangerous stuff (money, scrolls, potions)
+remap chr(2) => "abi?!\$ , \e";
+
+
+### More plugin settings:
+
+# autoadjusts
+sub autoadjust;
+autoadjust $aa_key         => "k";
+autoadjust $aa_unihorn     => "u";
+autoadjust $aa_athame      => "E";
+autoadjust $aa_stethoscope => "s";
+autoadjust $aa_pickaxe     => "x";
+autoadjust $aa_bag         => "b";
+#autoadjust $aa_Amulet      => "d";
+autoadjust $aa_blindfold   => "B";
+#autoadjust $aa_lizard      => "L";
+autoadjust $aa_lamp        => "L";
+autoadjust $aa_conflict    => "c";
+autoadjust $aa_whistle     => "w";
+autoadjust $aa_levitation  => "l";
+#autoadjust $aa_instrument  => "a";
+
+autoadjust $aa_trice => "^ye";
+#autoadjust qr/\bpotions?\b[^.]*?/ => "^q";
+#autoadjust qr/\bwand\b[^.]*?/ => "^z";
+
+# botl / status lines
+$statusline = sub {
+    my $time_length = length($botl{time});
+    sprintf "%s  %s $colormap{darkgray}%s",
+            $botl{char}, $botl{stats},
+            $botl{time};
+};
+
