@@ -38,4 +38,5 @@ make_tab qr/^A few ice cubes drop from the wand./ => nw("cold");
 make_tab qr/^The \w+ is riddled by bullet holes!/ => nw("magic missile");
 make_tab qr/^The bugs on the \w+ slow down!/ => nw("slow monster");
 make_tab qr/^The bugs on the \w+ speed up!/ => nw("speed monster");
-
+make_tab qr/^The bugs on the \w+ stop moving!/ => nw("sleep/death");
+make_tab qr/^The engraving on the \w+ vanishes!/ => nw("vanish (invis/cancel/tele)");
