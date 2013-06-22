@@ -30,6 +30,12 @@ sub note_all # (stuff noted every time, like wishes) # {{{
     each_match $matching => sub { make_note(value_of($note)) };
 } # }}}
 
+sub note_turn
+{
+	my ($matching, $note) = @_;
+	my $t = value_of($note);
+	each_match $matching => sub { make_note("$t on turn $turncount") };
+}
 # sub note_once_per_dl (stuff noted only once for a dlvl, like shops) {{{
 {
 	my %seen_dl;
@@ -277,3 +283,4 @@ unless ($nonote_intrinsics)
 # }}}
 # }}}
 }
+note_turn qr/(?:You add (\w+) to your repertoire)|(?:Your knowledge of (\w+) is keener)|(?:You learn (\w+)\.)/ => "learned $1";
