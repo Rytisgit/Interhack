@@ -1,3 +1,11 @@
+# Adds an extended command to show the time since the last prayer and a rough
+# estimate of prayer safety.
+# The plugin notes crowning, but also provides an extended command to toggle
+# crowning manually.
+# This only really works when InterHack has seen your last prayer
+#
+# joc
+
 my $praytime = 0;
 my $crowned = 0;
 
@@ -19,7 +27,7 @@ extended_command "praytime" => sub
 		my $timeout = $turncount - $praytime;
 		my $confidence_threshold = $crowned ? 3980 : 1229;
 		my $safe_msg = "$colormap{green} 95% safe assuming normal timeout\e[0m";
-		my $unsafe_msg = "$colormap{red} $brown confidence < 95%\e[0m";
+		my $unsafe_msg = "$colormap{brown} confidence < 95%\e[0m";
 
 		my $response = "The last prayer was $timeout turns ago.";
 		if ($timeout >= $confidence_threshold) { $response .= $safe_msg; }
