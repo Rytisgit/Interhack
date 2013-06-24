@@ -21,7 +21,7 @@ sub calc_read_chances
     join ', ', map { "$_:" . _calc_read_chance($in, $xl, $_) . "%"} @sl;
 }
 
-extended_command "#readbook"
+extended_command "#readchance"
               => sub
                  {
                    calc_read_chances($in, $xlvl, undef);
