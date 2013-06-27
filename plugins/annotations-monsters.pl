@@ -25,17 +25,22 @@ my %attack_types = (
 	"X" => "explode",
 );
 
+my $ce = "\e[0m";
+my $instadeathc = $mc_instadeath || $colormap{'purple'};
+my $erosionc    = $mc_erosion    || $colormap{'brown'};
+my $helplessc   = $mc_helpless   || $colormap{'red'};
+
 my %damage_types = (
 	"A" => "acid",
 	"C" => "cold",
-	"D" => "disint.",
+	"D" => $instadeathc."disint.$ce",
 	"E" => "shock",
 	"F" => "fire",
 	"H" => "heal",
 	"M" => "missiles",
-	"P" => "Poison",
-	"R" => "erode metal",
-	"S" => "sleep",
+	"P" => $instadeathc."poison$ce",
+	"R" => $erodec."erode metal$ce",
+	"S" => $helplessc."sleep$ce",
 	"V" => "drain lev",
 	"b" => "blind",
 	"c" => "confuse",
@@ -44,24 +49,24 @@ my %damage_types = (
 	"h" => "hallu",
 	"i" => "steal intrinsic",
 	"m" => "stick",
-	"r" => "rot organics",
+	"r" => $erosionc."rot organics$ce",
 	"s" => "stun",
 	"t" => "teleport",
-	"w" => "wrap and drown",
+	"w" => $instadeathc."wrap and drown$ce",
 	"x" => "prick legs",
 	"z" => "special",
-	"." => "paralyse",
+	"." => $helplessc."paralyse$ce",
 	"+" => "spell",
 	"-" => "steal",
-	"\"" => "disenchant",
-	"&" => "disrobe",
+	"\"" => $erosionc."disenchant$ce",
+	"&" => $helplessc."disrobe$ce",
 	"<" => "slow",
 	"!C" => "drain con",
 	"!D" => "drain dex",
 	"!I" => "drain int",
-	"#" => "disease",
+	"#" => $instadeathc."disease$ce",
 	"\$" => "steal \$",
-	"*" => "stone",
+	"*" => $instadeathc."stone$ce",
 	"@" => "lycanthropy/slime",
 );
 
@@ -3105,53 +3110,101 @@ sub format_attacks
 		$typestr .= $passive_attack_str{$passive} if $passive;
 		$typestr .= ")" if ($dmgtype or $passive);
 
+		my $color = attackcolor($roll);
 		if (!$first) { $result .= ", "; }
 		$result .= "$attack_types{$kind} " if $kind;
-		$result .= $roll;
+		$result .= $color . $roll . ($color ? "\e[0m" : "");
 		$result .= " $typestr" if $typestr;
 		if ($first) { $first = 0; }
 	}
 	return $result;
 };
 
-sub format_monster_annotation
+sub attackstats
+{
+	my $attack = shift;
+	my ($dice, $sides) = $attack =~ /([0-9]+)d([0-9]+)?/;
+	my $min = $dice;
+	my $max = $min;
+	my $avg = $min;
+	if ($sides)
+	{
+		$avg = 0.5 * ($sides + 1) * $dice;
+		$max = $dice * $sides;
+	}
+	return ($min, $avg, $max);
+}
+
+sub speedcolor
 {
 	my $name = shift;
-	my $s = "spd: $mondata{$name}{'spd'}; AC$mondata{$name}{'ac'}";
-    	$s .= "; MR: $mondata{$name}{'mr'}" if $mondata{$name}{'mr'} > 0;
-	if ($mondata{$name}{'resists'})
-	{
-		$s .= "; resists ";
-		my $first = 1;
-		for my $r (split //, $mondata{$name}{'resists'})
-		{
-			if (!$first) { $s .= ", "; }
-			$s .= $resist_types{lc $r};
-			if ($first) { $first = 0; }
-		}
-	}
 
-	if ($mondata{$name}{'attacks'})
-	{
-		$s .= "; attacks: " . format_attacks($mondata{$name}{'attacks'});
-	}
-	return $s;
-};
-		
+	my $slowc  = $mc_normalspeed || $colormap{'yellow'};
+	my $fastc  = $mc_fast        || $colormap{'red'};
+	my $vfastc = $mc_veryfast    || $colormap{'bold&red'};
+
+	my $monspeed = $mondata{$name}{'spd'};
+	my $spdcolor = '';
+	if ($monspeed >= 12) { $spdcolor = $slowc; } #normal speed
+	if ($monspeed >= 16) { $spdcolor = $fastc; } #intrinsic speed
+	if ($monspeed >= 20) { $spdcolor = $vfastc; } #extrinsic speed
+}
+
+sub attackcolor
+{
+	my $c1 = $mc_onehit || $colormap{'bold&red'};
+	my $c2 = $mc_onehit || $colormap{'red'};
+	my $c3 = $mc_onehit || $colormap{'yellow'};
+
+	my $attack = shift;
+	my ($min, $avg, $max) = attackstats($attack);
+	my $color = "";
+	if (5*$max >= $curhp) { $color = $c3; }
+	if (2*$max >= $curhp) { $color = $c2; }
+	if (1*$max >= $curhp) { $color = $c1; }
+	return $color;
+}
+
+# register annotations
 for my $monster (keys %mondata)
 {
 	my $escaped_name = $monster;
- 	$escaped_name =~ s/ /\\ /g;
+	$escaped_name =~ s/ /\\ /g;
 	my $re = qr/
-		^(?:$species|~)
-		[^\(]+
-		\(
-		(?:peaceful\ |tame\ |invisible\ |tail\ of\ a\ )?
-		$escaped_name
-		(?:\ called [\w\s]+)?
-		(?:, [\w\s]+)?     # "holding you", "leashed to you" etc.
-		\)
-		\s+(?:\[seen:[^\]]+\]\s+)?$
-		/x;
-	make_annotation $re => format_monster_annotation($monster);
+	^(?:$species|~)
+	[^\(]+
+	\(
+	(?:peaceful\ |tame\ |invisible\ |tail\ of\ a\ )?
+	$escaped_name
+	(?:\ called [\w\s]+)?
+	(?:, [\w\s]+)?     # "holding you", "leashed to you" etc.
+	\)
+	\s+(?:\[seen:[^\]]+\]\s+)?$
+	/x;
+	make_annotation $re => sub
+	{
+		my $spdcolor = speedcolor($monster);
+		my $s = $spdcolor . "spd: $mondata{$monster}{'spd'}" . ($spdcolor ? "\e[0m;" : "");
+
+		$s .= " AC$mondata{$monster}{'ac'}";
+		$s .= "; MR: $mondata{$monster}{'mr'}" if $mondata{$monster}{'mr'} > 0;
+		if ($mondata{$monster}{'resists'})
+		{
+			$s .= "; resists ";
+			my $first = 1;
+			for my $r (split //, $mondata{$monster}{'resists'})
+			{
+				if (!$first) { $s .= ", "; }
+				$s .= $resist_types{lc $r};
+				if ($first) { $first = 0; }
+			}
+		}
+
+		if ($mondata{$monster}{'attacks'})
+		{
+			$s .= "; attacks: " . format_attacks($mondata{$monster}{'attacks'});
+		}
+		return $s;
+	};
 }
+
