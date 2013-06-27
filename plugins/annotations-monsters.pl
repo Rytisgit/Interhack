@@ -3152,14 +3152,14 @@ sub speedcolor
 
 sub attackcolor
 {
-	my $c1 = $mc_onehit || $colormap{'bold&red'};
-	my $c2 = $mc_onehit || $colormap{'red'};
-	my $c3 = $mc_onehit || $colormap{'yellow'};
+	my $c1 = $mc_onehit    || $colormap{'bold&red'};
+	my $c2 = $mc_twohits   || $colormap{'red'};
+	my $c3 = $mc_threehits || $colormap{'yellow'};
 
 	my $attack = shift;
 	my ($min, $avg, $max) = attackstats($attack);
 	my $color = "";
-	if (5*$max >= $curhp) { $color = $c3; }
+	if (3*$max >= $curhp) { $color = $c3; }
 	if (2*$max >= $curhp) { $color = $c2; }
 	if (1*$max >= $curhp) { $color = $c1; }
 	return $color;
