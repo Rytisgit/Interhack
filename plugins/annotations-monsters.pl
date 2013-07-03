@@ -25,7 +25,7 @@ my %attack_types = (
 	"X" => "explode",
 );
 
-my $ce = "\e[0m";
+my $ce = $colormap{'nhblack'};
 my $instadeathc = $mc_instadeath || $colormap{'purple'};
 my $erosionc    = $mc_erosion    || $colormap{'brown'};
 my $helplessc   = $mc_helpless   || $colormap{'red'};
