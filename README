@@ -1,3 +1,55 @@
++------------+
+| 2021 GUIDE |
++------------+
+I want to play by connecting to hardfought nethack server on windows with IBMGraphics supported.
+
+To Achieve this I use Putty for display and WSL for easier compilation on Linux.
+
+Another Windows console could be used to display tty or DECGraphics,
+by connecting directly to a WSL command line and skipping the 3rd of the possible issues.
+
+Possible Issues:
+1. An older version of perl will need to be used due to : 
+https://metacpan.org/pod/perl5260delta#Removal-of-the-current-directory-(%22.%22)-from-@INC
+
+Solution: instal perlbrew and grab a version before the change:
+	sudo perlbrew --notest install 5.25.3
+	
+I used 5.25.3 with --notest because some failed, it seems to work.
+
+After this switch to the older perl version when launching or compiling interhack:
+	sudo perlbrew switch perl-5.25.3
+
+2. When Trying to make the makefile with "perl Makefile.PL" dependencies might not auto install
+
+Solution: as written in the BUILDING Chapter below, install individualy with:
+
+	cpan -i IO::Socket::INET (or other missing dependency)
+
+After this makefile should be able to be generated and then made with make.
+
+3. Connect to wsl and support IBMGraphics on windows:
+
+Solution: SSH into WSL with putty and setup the correct codepage
+
+You will need to setup WSL to allow ssh into it from windows, this guide worked for me:
+https://virtualizationreview.com/articles/2017/02/08/graphical-programs-on-windows-subsystem-on-linux.aspx
+
+Or just search "Windows ssh into WSL" and try stuff out.
+
+After this you should be able to connect to wsl through putty.
+
+Then go into Putty settings, Window, Translation and manually type in CP437 to enable IBMGraphics.
+
+END RESULT:
+after setting up config file with directions to do so below in CONFIG and CONFIGURATION
+Use putty to ssh into wsl locally "127.0.0.0:2222";
+switch to older perl version with "sudo perlbrew switch perl-5.25.3" ;
+run interhack as normal as written in the RUNNING chapter.
+( "perl interhack.pl" since connecting to hardfought for me, 
+then type in "ssh -t nethack@eu.hardfought.org" without seeing any text written and it should connect.)
+
+---------------------------------------------------------------------------
 Interhack is a layer that sits between you and your NetHack server (which we'll
 call NAO) and plays with the text going both ways. For example, this could be
 used to color the message "You are slowing down" in bright red.
