@@ -1,13 +1,22 @@
 # main config {{{
+
 nick "sentinel2";
 server "ih_server";
+
 $vikeys = 1;
 $write_keys = 1;
+$write_interhack_ttyrec = 1;
+$write_normal_ttyrec = 1;
 $no_evalcontext = 1;
+$sell_id_tab=1;
+$sell_id_uniq=1;
+
 # }}}
 # plugins {{{
-exclude "dual-slow-digestion";
-$chromatic_gods = 0;
+
+exclude ("dual-slow-digestion", "artifact-name", "unnamed-scrolls","monster-rename", "notes", "confirm-confirm", "eval", "fight", "fortune", "termcast");
+
+$align_chromatic_gods = 1;
 $chromatic_nemeses = 1;
 $write_interhack_ttyrec = 1;
 # wish-menu {{{
@@ -16,49 +25,37 @@ $bfg = "blessed greased fixed";
 # }}}
 
 include "*";
-#$statusline = sub { my $timepos = 80 - length($botl{time}); "$botl{score} \e[23;${timepos}H$colormap{darkgray}$botl{time}\e[0m" };
-$fortune = "yasd ideas nethackidiocy";
+
 # }}}
 # remappings {{{
 our $elbereths = 0;
 remap "\ce" => sub { $elbereths++; "E-  Elbereth\n" };
 #remap "\cw" => "aany\e"; # drawbridge
 remap "\cw" => "#rest";
-#remap "\cv" => sub { $elbereths += 3; ("E-  Elbereth\n"x3).">      " };
+# ^b to bag auto-bag non-dangerous stuff (money, scrolls, potions)
+remap chr(2) => "abi?!\$ , \e";
+
+
 # }}}
 # autoadjusts {{{
 sub autoadjust;
 
 autoadjust $aa_key         => "k";
-autoadjust $aa_unihorn     => "S";
+autoadjust $aa_unihorn     => "u";
 autoadjust $aa_athame      => "E";
 autoadjust $aa_stethoscope => "s";
 autoadjust $aa_pickaxe     => "x";
 autoadjust $aa_bag         => "b";
 autoadjust $aa_Amulet      => "d";
 autoadjust $aa_blindfold   => "H";
-autoadjust $aa_lizard      => "L";
+#autoadjust $aa_lizard      => "L";
 autoadjust $aa_conflict    => "C";
 autoadjust $aa_whistle     => "w";
-autoadjust $aa_lamp        => "l";
+autoadjust $aa_lamp        => "L";
+autoadjust $aa_levitation  => "l";
 autoadjust $aa_luckstone   => "Z";
 autoadjust $aa_instrument  => "n";
 autoadjust $aa_trice       => "^ye";
 
 # }}}
-# botl {{{
-#$statusline = sub { my $timepos = 80 - length($botl{time}); "$botl{score} \e[23;${timepos}H$colormap{darkgray}$botl{time}\e[0m" };
-#$show_sl = false;
-#$show_bl = false;
-$statusline = sub
-{
-    my $time_length = length($botl{time});
-    my $cur_length;
-#    sprintf "S:%d E:%d K:%d \e[23;%dH$colormap{darkgray}%s\e[0m",
-#            $score,
-#            $elbereths,
-#            80 - $time_length,
-#            $botl{time},
-};
-#}}}
 # vim:ft=perl:fdm=marker:
