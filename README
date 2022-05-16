@@ -43,6 +43,7 @@ Then go into Putty settings, Window, Translation and manually type in CP437 to e
 
 END RESULT:
 after setting up config file with directions to do so below in CONFIG and CONFIGURATION
+if ssh in WSL not started start it with "sudo service ssh start"
 Use putty to ssh into wsl locally "127.0.0.0:2222";
 switch to older perl version with "sudo perlbrew switch perl-5.25.3" ;
 run interhack as normal as written in the RUNNING chapter.
