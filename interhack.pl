@@ -950,6 +950,14 @@ while (1)
   }
 
   $topline = $vt->row_plaintext(1);
+  if ($vt->row_plaintext(2) =~ /--More--\s*$/){
+	  $topline=~s/ *$/ /;
+	  $topline.=$vt->row_plaintext(2);
+	  $topline=~s/--More--\s*$//;
+  }elsif ($vt->row_plaintext(2) =~ /\[ynaq\] \([yn]\)\s*$/){
+	  $topline=~s/ *$/ /;
+	  $topline.=$vt->row_plaintext(2);
+  };
   study $topline;
 
   unless ($stop_sing_pass)

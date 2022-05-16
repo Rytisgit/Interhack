@@ -37,6 +37,11 @@ each_iteration
     return unless defined $xp;
     $exp_needed = exp_for($xlvl+1) - $xp;
     $exp_needed = 0 if $xlvl == 30;
-    $botl{xp} = "Xp:${xlvl}n${exp_needed}";
+	if (($exp_2nl_max >0 && $xlvl > $exp_2nl_max)||
+		($exp_2nl_noendgame && $dlvl=~/End Game|Astral Plane/)){
+		$botl{xp} = "Xp:${xlvl}"
+	}else{
+		$botl{xp} = "Xp:${xlvl}n${exp_needed}";
+	};
 };
 

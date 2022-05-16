@@ -69,6 +69,23 @@ our %price_table =
                       'teleportation'],
               500 => ['death', 'wishing'],
           },
+  'boots' => {
+              10 => ['elven', 'kicking'],
+              30 => ['fumble', 'levitation'],
+              50 => ['jumping', 'speed', 'water walking'],
+		  },
+  'helmet' => {
+              10 => ['plain'],
+              50 => ['brilliance', 'opp.align', 'telepathy'],
+		  },
+  'gloves' => {
+               8 => ['leather'],
+              50 => ['dexterity', 'fumbling', 'power'],
+		  },
+  'cloak' => {
+              50 => ['displacement', 'protection'],
+              60 => ['invisibility', 'magic resistance'],
+		  },
 );
 
 our $shirt = 0;
@@ -132,7 +149,7 @@ make_tab qr/^(?:You have a little trouble lifting )?(.) - (an?|\d+) (?:clear pot
              "\e\e#name\ny$letter$buc\n";
          };
 
-make_tab qr/^(?:You have a little trouble lifting )?(.) - (an?|\d+) (?:blessed |uncursed |cursed )?(.*?) ?(scroll|potion|wand|ring|spellbook)s? (?:(?:called |labeled )(.*?) ?)?\(unpaid, (\d+) zorkmids?\)\./
+make_tab qr/^(?:You have a little trouble lifting )?(.) - (an?|\d+) (?:blessed |uncursed |cursed )?(?:pair of )?(.*?) ?(scroll|potion|wand|ring|spellbook|boots|helmet|gloves)s? (?:(?:called |labeled )(.*?) ?)?\(unpaid, (\d+) zorkmids?\)\./
       => sub
          {
              my ($letter, $count, $appearance, $type, $existing, $cost)

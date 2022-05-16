@@ -18,8 +18,8 @@ for my $item (qw/char stats score dlvl gold hp pw ac xp turncount status/)
 each_iteration
 {
     $postprint .= "\e7";
-    my $sl = $statusline->();
-    my $bl = $botl->();
+    my $sl = $vt->row_sgrtext(23);
+    my $bl = $vt->row_sgrtext(24);
     $postprint .= "\e[23;1H\e[K\e[0m$sl" if $show_sl;
     $postprint .= "\e[24;1H\e[K\e[0m$bl" if $show_bl;
     $postprint .= "\e8";

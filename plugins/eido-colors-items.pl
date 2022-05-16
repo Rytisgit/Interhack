@@ -178,7 +178,8 @@ recolor qr/\b(?:stone called )?(?<!your )load(?:stone)?\b/ => $ec_loadstone || "
 if (!$ece_bohboom)
 {
     recolor qr/\bbag $called tricks\b/ => $ec_bot || $ec_bohboom || "blue";
-    recolor qr/\bwand $called [^\e]*?(?<!!)canc(?:ellation)?\b(?! named ${colors}e(?:mpty)?\b| (?:named .*?)?\($colors\d+$colors:${colors}(?:0|-1)$colors\))/ => $ec_canc || $ec_bohboom || "blue";
+    recolor qr/\bwand $called [^\e]*?(?<!!)(?:canc(?:el|ellation)?|vanish)\b(?! named ${colors}e(?:mpty)?\b| (?:named .*?)?\($colors\d+$colors:${colors}(?:0|-1)$colors\))/ => $ec_canc || $ec_bohboom || "blue";
+    recolor qr/\b(?:bag|sack) named [^\e]*?(?<!!)canc(?:el|ellation)?\b/ => $ec_canc || $ec_bohboom || "blue";
     recolor qr/\bwand $called (?:\w+ )?vanish(?:e[rs])?\b/ => $ec_vanish || $ec_canc || $ec_bohboom || "blue";
 }
 # }}}
@@ -247,6 +248,7 @@ if (!$ece_useless)
 {
 # things explicitly named "crap" {{{
     recolor qr/\w+ called (?:crap|junk|worthless)\b/ => $ec_useless_crap || $ec_useless || "darkgray" unless $ece_useless_crap;
+    recolor qr/worthless pieces? of (\w+|\w+ \w+) glass\b/ => $ec_useless_crap || $ec_useless || "darkgray" unless $ece_useless_crap;
 # }}}
 # scrolls {{{
     recolor qr/scrolls? (?:called|of) (?:light|confuse monster|stinking cloud|punishment|fire|destroy armor|amnesia|create monster|food detection)\b/ => $ec_useless_scrolls || $ec_useless || "darkgray" unless $ece_useless_scrolls;
